@@ -245,7 +245,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ id: st
               <div className="bg-gradient-to-br from-[#dbf72c]/10 to-transparent border border-[#dbf72c]/30 rounded-2xl p-8 mb-8">
                 <h3 className="text-2xl font-bold text-white mb-6">Key Results</h3>
                 <ul className="space-y-4">
-                  {project.results.map((result, index) => (
+                  {project.results.map((result: string, index: number) => (
                     <li key={index} className="flex items-start gap-3">
                       <CheckCircle className="text-[#dbf72c] flex-shrink-0 mt-1" size={24} />
                       <span className="text-white text-lg font-medium">{result}</span>
@@ -257,7 +257,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ id: st
               <div className="bg-gray-900 rounded-2xl p-8 border border-gray-800">
                 <h3 className="text-2xl font-bold text-white mb-6">Features Delivered</h3>
                 <ul className="space-y-3">
-                  {project.features.map((feature, index) => (
+                  {project.features.map((feature: string, index: number) => (
                     <li key={index} className="flex items-start gap-3">
                       <div className="w-2 h-2 bg-[#dbf72c] rounded-full mt-2 flex-shrink-0"></div>
                       <span className="text-gray-300">{feature}</span>
@@ -275,7 +275,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ id: st
         <div className="max-w-[1350px] mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-4xl font-bold text-white mb-12 text-center">Project Gallery</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {project.gallery.map((image, index) => (
+            {project.gallery.map((image: string, index: number) => (
               <div key={index} className="relative h-80 rounded-2xl overflow-hidden group">
                 <Image
                   src={image}
