@@ -1,23 +1,42 @@
-'use client';
-
-import { useParams } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowLeft, ExternalLink, Calendar, Tag, CheckCircle } from 'lucide-react';
+import { neon } from '@neondatabase/serverless';
+import { notFound } from 'next/navigation';
 
-export default function ProjectPage() {
-  const params = useParams();
-  const id = params.id as string;
+const sql = neon(process.env.DATABASE_URL!);
 
-  // Project data - in a real app, this would come from a database or API
-  const projects = [
+async function getProject(id: string) {
+  try {
+    const projects = await sql`
+      SELECT * FROM portfolio_projects 
+      WHERE id = ${id} AND is_published = true
+    `;
+    
+    return projects[0] || null;
+  } catch (error) {
+    console.error('Error fetching project:', error);
+    return null;
+  }
+}
+
+export default async function ProjectPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  const dbProject = await getProject(id);
+  
+  if (!dbProject) {
+    notFound();
+  }
+
+  // Fallback hardcoded projects for backward compatibility
+  const hardcodedProjects = [
     {
       id: 'ecommerce-platform',
       title: 'E-Commerce Platform',
       category: 'Web Development',
       description: 'A modern e-commerce solution with real-time inventory and seamless checkout experience.',
       image: 'https://images.unsplash.com/photo-1661956602116-aa6865609028?w=1600&h=900&fit=crop',
-      tags: ['Next.js', 'Stripe', 'Tailwind CSS'],
+      tags: ['Web Development', 'Design', 'Photography'],
       client: 'RetailCo',
       date: 'March 2024',
       duration: '3 months',
@@ -50,7 +69,7 @@ export default function ProjectPage() {
       category: 'App Development',
       description: 'Cross-platform mobile app helping users track workouts and achieve fitness goals.',
       image: 'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=1600&h=900&fit=crop',
-      tags: ['React Native', 'Firebase', 'HealthKit'],
+      tags: ['App Development', 'Design', 'Social Media'],
       client: 'FitLife',
       date: 'February 2024',
       duration: '4 months',
@@ -83,7 +102,7 @@ export default function ProjectPage() {
       category: 'Social Media',
       description: 'Viral social media campaign generating 5M+ impressions and 200K+ engagements.',
       image: 'https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=1600&h=900&fit=crop',
-      tags: ['Instagram', 'TikTok', 'Content Strategy'],
+      tags: ['Social Media', 'Design', 'Videography'],
       client: 'TrendyBrand',
       date: 'January 2024',
       duration: '2 months',
@@ -112,7 +131,24 @@ export default function ProjectPage() {
     },
   ];
 
-  const project = projects.find(p => p.id === id) || projects[0];
+  // Map database project to expected format
+  const project = {
+    id: dbProject.id.toString(),
+    title: dbProject.title,
+    category: dbProject.category,
+    description: dbProject.description || '',
+    image: dbProject.image_url || 'https://images.unsplash.com/photo-1661956602116-aa6865609028?w=1600&h=900&fit=crop',
+    tags: dbProject.tags || [],
+    client: dbProject.client || 'Client',
+    date: dbProject.project_date || 'Recent',
+    duration: dbProject.duration || 'N/A',
+    overview: dbProject.overview || dbProject.description || '',
+    challenge: dbProject.challenge || '',
+    solution: dbProject.solution || '',
+    results: dbProject.results ? dbProject.results.split('\n').filter((r: string) => r.trim()) : [],
+    features: dbProject.features || [],
+    gallery: dbProject.gallery_urls || [],
+  };
 
   return (
     <div className="min-h-screen bg-[#0c0f17]">
@@ -123,6 +159,7 @@ export default function ProjectPage() {
           alt={project.title}
           fill
           className="object-cover"
+          style={{ objectPosition: 'center center' }}
           priority
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-[#0c0f17]"></div>
@@ -137,12 +174,14 @@ export default function ProjectPage() {
               Back to Portfolio
             </Link>
             
-            <div className="flex items-center gap-3 mb-4">
-              <span className="bg-[#dbf72c] text-[#0c0f17] px-4 py-1 rounded-full text-sm font-semibold">
-                {project.category}
-              </span>
-              {project.tags.map((tag, index) => (
-                <span key={index} className="bg-white/10 text-white px-3 py-1 rounded-full text-sm">
+            <div className="flex flex-wrap items-center gap-3 mb-4">
+              {project.category.split(', ').map((service: string, index: number) => (
+                <span key={index} className="bg-[#dbf72c] text-[#0c0f17] px-4 py-1 rounded-full text-sm font-semibold">
+                  {service}
+                </span>
+              ))}
+              {project.tags.map((tag: string, tagIndex: number) => (
+                <span key={tagIndex} className="bg-white/10 text-white px-3 py-1 rounded-full text-sm">
                   {tag}
                 </span>
               ))}
@@ -186,7 +225,7 @@ export default function ProjectPage() {
         <div className="max-w-[1350px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
             <div>
-              <h2 className="text-4xl font-bold text-white mb-6">Project Overview</h2>
+              <h2 className="text-4xl font-bold text-white mb-6">Business Overview</h2>
               <p className="text-gray-300 text-lg leading-relaxed mb-8">
                 {project.overview}
               </p>

@@ -1,9 +1,43 @@
+'use client';
+
 import Link from 'next/link';
 import Image from 'next/image';
 import { Mail, Phone, MapPin } from 'lucide-react';
+import { useState, FormEvent } from 'react';
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
+  const [formData, setFormData] = useState({ name: '', email: '' });
+  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const [message, setMessage] = useState('');
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setStatus('loading');
+    setMessage('');
+
+    try {
+      const response = await fetch('/api/newsletter', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setStatus('success');
+        setMessage(data.message);
+        setFormData({ name: '', email: '' });
+      } else {
+        setStatus('error');
+        setMessage(data.error);
+      }
+    } catch (error) {
+      setStatus('error');
+      setMessage('Failed to subscribe. Please try again.');
+    }
+  };
 
   return (
     <footer className="bg-[#0c0f17] text-gray-300 border-t border-gray-800 w-full">
@@ -20,7 +54,7 @@ export default function Footer() {
               />
             </div>
             <p className="text-sm text-gray-400 mb-4">
-              Global IT & Marketing Solutions. Creating exceptional digital experiences worldwide.
+              Global IT & Marketing Solutions. We specialize in creating exceptional digital experiences that transform businesses worldwide. From cutting-edge web development to stunning design, we deliver innovative solutions that drive real results for our clients across the globe.
             </p>
             <div className="flex space-x-4 justify-center">
               <a href="#" className="hover:text-[#dbf72c] transition-colors" aria-label="Facebook">
@@ -51,49 +85,68 @@ export default function Footer() {
             </div>
           </div>
 
-          <div>
-            <h3 className="text-white font-semibold mb-4">Services</h3>
-            <ul className="space-y-2 text-sm">
-              <li><Link href="/services" className="hover:text-[#dbf72c] transition-colors">Web Development</Link></li>
-              <li><Link href="/services" className="hover:text-[#dbf72c] transition-colors">App Development</Link></li>
-              <li><Link href="/services" className="hover:text-[#dbf72c] transition-colors">Social Media</Link></li>
-              <li><Link href="/services" className="hover:text-[#dbf72c] transition-colors">PPC & Design</Link></li>
-              <li><Link href="/services" className="hover:text-[#dbf72c] transition-colors">Photography</Link></li>
-              <li><Link href="/services" className="hover:text-[#dbf72c] transition-colors">Videography</Link></li>
-            </ul>
+          <div className="max-w-xs mx-auto">
+            <h3 className="text-white font-semibold mb-4">Our Newsletter</h3>
+            <p className="text-sm text-gray-400 mb-4">
+              Stay updated with our latest news:
+            </p>
+            <form onSubmit={handleSubmit} className="space-y-2">
+              <input
+                type="text"
+                placeholder="Enter your name"
+                value={formData.name}
+                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                required
+                disabled={status === 'loading'}
+                className="w-full px-4 py-2 rounded-lg bg-gray-800 border border-gray-700 text-white placeholder-gray-500 focus:outline-none focus:border-[#dbf72c] transition-colors text-sm disabled:opacity-50"
+              />
+              <input
+                type="email"
+                placeholder="Enter your email"
+                value={formData.email}
+                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                required
+                disabled={status === 'loading'}
+                className="w-full px-4 py-2 rounded-lg bg-gray-800 border border-gray-700 text-white placeholder-gray-500 focus:outline-none focus:border-[#dbf72c] transition-colors text-sm disabled:opacity-50"
+              />
+              <button
+                type="submit"
+                disabled={status === 'loading'}
+                className="w-full bg-[#dbf72c] text-[#0c0f17] px-4 py-2 rounded-lg font-semibold hover:shadow-lg hover:shadow-[#dbf72c]/50 transition-all duration-300 text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {status === 'loading' ? 'Subscribing...' : 'Subscribe'}
+              </button>
+              {message && (
+                <p className={`text-sm text-center ${status === 'success' ? 'text-[#dbf72c]' : 'text-red-400'}`}>
+                  {message}
+                </p>
+              )}
+            </form>
           </div>
 
           <div>
-            <h3 className="text-white font-semibold mb-4">Company</h3>
+            <h3 className="text-white font-semibold mb-4">Quick Links</h3>
             <ul className="space-y-2 text-sm">
-              <li><Link href="/about" className="hover:text-[#dbf72c] transition-colors">About Us</Link></li>
+              <li><Link href="/" className="hover:text-[#dbf72c] transition-colors">Home</Link></li>
+              <li><Link href="/services" className="hover:text-[#dbf72c] transition-colors">Services</Link></li>
               <li><Link href="/portfolio" className="hover:text-[#dbf72c] transition-colors">Portfolio</Link></li>
+              <li><Link href="/about" className="hover:text-[#dbf72c] transition-colors">About Us</Link></li>
               <li><Link href="/contact" className="hover:text-[#dbf72c] transition-colors">Contact</Link></li>
-              <li><Link href="#" className="hover:text-[#dbf72c] transition-colors">Careers</Link></li>
-              <li><Link href="#" className="hover:text-[#dbf72c] transition-colors">Blog</Link></li>
+              <li><Link href="/quote" className="hover:text-[#dbf72c] transition-colors">Get a Quote</Link></li>
             </ul>
           </div>
 
           <div>
-            <h3 className="text-white font-semibold mb-4">Contact</h3>
-            <ul className="space-y-3 text-sm">
-              <li className="flex items-start space-x-2 justify-center">
-                <MapPin size={16} className="mt-1 flex-shrink-0" />
-                <span>Serving clients worldwide</span>
-              </li>
-              <li className="flex items-center space-x-2 justify-center">
-                <Mail size={16} className="flex-shrink-0" />
-                <a href="mailto:hello@lynks.com" className="hover:text-[#dbf72c] transition-colors">
-                  hello@lynks.com
-                </a>
-              </li>
-              <li className="flex items-center space-x-2 justify-center">
-                <Phone size={16} className="flex-shrink-0" />
-                <a href="tel:+1234567890" className="hover:text-[#dbf72c] transition-colors">
-                  +1 (234) 567-890
-                </a>
-              </li>
-            </ul>
+            <h3 className="text-white font-semibold mb-4">Book a Meeting</h3>
+            <p className="text-sm text-gray-400 mb-4">
+              If you would like to book a meeting or would like to request a call back, please click below
+            </p>
+            <Link 
+              href="/book-a-meeting"
+              className="inline-block bg-[#dbf72c] text-[#0c0f17] px-6 py-2 rounded-lg font-semibold hover:shadow-lg hover:shadow-[#dbf72c]/50 transition-all duration-300 text-sm"
+            >
+              Book Now
+            </Link>
           </div>
         </div>
 

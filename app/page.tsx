@@ -1,38 +1,44 @@
 import Link from 'next/link';
-import { Code, Smartphone, Share2, Target, Camera, Video, ArrowRight, Globe, Zap, Users } from 'lucide-react';
+import { Code, Smartphone, Share2, Target, Palette, Printer, ArrowRight, Globe, Zap, Users } from 'lucide-react';
 import HeroVideo from '@/components/HeroVideo';
 
 export default function Home() {
   const services = [
     {
+      id: 'web-development',
       icon: Code,
       title: 'Web Development',
       description: 'Custom websites built with cutting-edge technologies for optimal performance and user experience.',
     },
     {
+      id: 'app-development',
       icon: Smartphone,
       title: 'App Development',
       description: 'Native and cross-platform mobile applications that scale from startups to enterprise.',
     },
     {
+      id: 'social-media',
       icon: Share2,
       title: 'Social Media',
       description: 'Strategic social media management and content creation that drives engagement and growth.',
     },
     {
+      id: 'ppc',
       icon: Target,
-      title: 'PPC & Design',
-      description: 'Data-driven PPC campaigns and stunning design work that converts visitors into customers.',
+      title: 'PPC',
+      description: 'Data-driven pay-per-click advertising campaigns that maximize your ROI and drive conversions.',
     },
     {
-      icon: Camera,
-      title: 'Photography',
-      description: 'Professional photography services capturing your brand story with artistic excellence.',
+      id: 'design',
+      icon: Palette,
+      title: 'Design',
+      description: 'Stunning visual design from logos to car wraps that brings your brand to life.',
     },
     {
-      icon: Video,
-      title: 'Videography',
-      description: 'Cinematic video production from concept to final edit that captivates your audience.',
+      id: 'print',
+      icon: Printer,
+      title: 'Print',
+      description: 'Professional print services including business cards, stickers, leaflets, and more.',
     },
   ];
 
@@ -108,7 +114,7 @@ export default function Home() {
             {services.map((service, index) => (
               <div
                 key={index}
-                className="group bg-gray-900/50 rounded-2xl p-8 hover:shadow-2xl hover:shadow-[#dbf72c]/20 transition-all duration-300 border border-gray-800 hover:border-[#dbf72c]"
+                className="group bg-gray-900/50 rounded-2xl p-8 hover:shadow-2xl hover:shadow-[#dbf72c]/20 transition-all duration-300 border border-gray-800 hover:border-[#dbf72c] flex flex-col"
               >
                 <div className="bg-[#dbf72c] w-14 h-14 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                   <service.icon className="text-[#0c0f17]" size={28} />
@@ -116,9 +122,16 @@ export default function Home() {
                 <h3 className="text-2xl font-bold text-white mb-3">
                   {service.title}
                 </h3>
-                <p className="text-gray-400">
+                <p className="text-gray-400 mb-6 flex-grow">
                   {service.description}
                 </p>
+                <Link
+                  href={`/services/${service.id}`}
+                  className="inline-flex items-center gap-2 text-[#dbf72c] font-semibold hover:gap-3 transition-all"
+                >
+                  Learn More
+                  <ArrowRight size={18} />
+                </Link>
               </div>
             ))}
           </div>

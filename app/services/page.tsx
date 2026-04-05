@@ -1,10 +1,11 @@
-import { Code, Smartphone, Share2, Target, Camera, Video, CheckCircle, ArrowRight } from 'lucide-react';
+import { Code, Smartphone, Share2, Target, Camera, Video, CheckCircle, ArrowRight, Palette, Printer } from 'lucide-react';
 import Link from 'next/link';
 import HeroVideo from '@/components/HeroVideo';
 
 export default function Services() {
   const services = [
     {
+      id: 'web-development',
       icon: Code,
       title: 'Web Development',
       description: 'Build powerful, scalable websites that drive business growth and deliver exceptional user experiences.',
@@ -19,6 +20,7 @@ export default function Services() {
       technologies: ['React', 'Next.js', 'Vue', 'Node.js', 'PHP', 'Python'],
     },
     {
+      id: 'app-development',
       icon: Smartphone,
       title: 'App Development',
       description: 'Native and cross-platform mobile applications that engage users and scale with your business.',
@@ -33,6 +35,7 @@ export default function Services() {
       technologies: ['React Native', 'Flutter', 'Swift', 'Kotlin', 'Firebase'],
     },
     {
+      id: 'social-media',
       icon: Share2,
       title: 'Social Media Management',
       description: 'Strategic social media presence that builds community, drives engagement, and grows your brand.',
@@ -47,20 +50,52 @@ export default function Services() {
       technologies: ['Instagram', 'Facebook', 'Twitter', 'LinkedIn', 'TikTok'],
     },
     {
+      id: 'ppc',
       icon: Target,
-      title: 'PPC & Design',
-      description: 'Data-driven advertising campaigns and stunning design that converts clicks into customers.',
+      title: 'PPC (Pay-Per-Click)',
+      description: 'Data-driven advertising campaigns that convert clicks into customers and maximize your ROI.',
       features: [
         'Google Ads management',
         'Facebook & Instagram ads',
-        'Landing page design',
+        'Landing page optimization',
         'A/B testing & optimization',
         'Conversion rate optimization',
-        'Brand identity design',
+        'Campaign analytics & reporting',
       ],
-      technologies: ['Google Ads', 'Meta Ads', 'Figma', 'Adobe Creative Suite'],
+      technologies: ['Google Ads', 'Meta Ads', 'LinkedIn Ads', 'Analytics'],
     },
     {
+      id: 'design',
+      icon: Palette,
+      title: 'Design',
+      description: 'Stunning visual design that brings your brand to life and captivates your audience.',
+      features: [
+        'Logo design & branding',
+        'Brand identity design',
+        'Illustrations',
+        'Car wrap designs',
+        'Mock-ups & prototypes',
+        'Clothing designs',
+      ],
+      technologies: ['Figma', 'Adobe Creative Suite', 'Illustrator', 'Photoshop'],
+    },
+    {
+      id: 'print',
+      icon: Printer,
+      title: 'Print',
+      description: 'Professional print services that bring your designs to life with high-quality materials and finishes.',
+      features: [
+        'Business cards',
+        'Stickers and labels',
+        'Leaflets',
+        'Booklets',
+        'Stationery',
+        'Calendars',
+      ],
+      technologies: ['Offset Printing', 'Digital Printing', 'Large Format', 'Finishing'],
+    },
+    {
+      id: 'photography',
       icon: Camera,
       title: 'Photography',
       description: 'Professional photography that captures your brand essence and tells your story visually.',
@@ -75,6 +110,7 @@ export default function Services() {
       technologies: ['Canon', 'Sony', 'Lightroom', 'Photoshop', 'Capture One'],
     },
     {
+      id: 'videography',
       icon: Video,
       title: 'Videography',
       description: 'Cinematic video production that engages audiences and elevates your brand storytelling.',
@@ -138,6 +174,13 @@ export default function Services() {
                       </span>
                     ))}
                   </div>
+                  <Link
+                    href={`/services/${service.id}`}
+                    className="inline-flex items-center gap-2 bg-[#dbf72c] text-[#0c0f17] px-6 py-3 rounded-full font-semibold hover:shadow-2xl hover:shadow-[#dbf72c]/50 transition-all duration-300"
+                  >
+                    Learn More
+                    <ArrowRight size={20} />
+                  </Link>
                 </div>
 
                 <div className="flex-1">
